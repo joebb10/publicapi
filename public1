@@ -1,0 +1,30 @@
+import re
+
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+def check_vulnerability(contract_code):
+  # Check for the "unchecked-send" vulnerability
+  pattern = r"call.value\((.+)\)"
+  match = re.search(pattern, contract_code)
+  if match:
+    print("Vulnerability found: unchecked-send")
+  else:
+    print("No unchecked-send vulnerability found.")
+  
+  
+
+@app.route('/check_vulnerability', methods=['POST'])
+def check_vuln():
+  contract_code = request.json['contract_code']
+  results = check_vulnerability(contract_code)
+  return jsonify(results)
+
+if __name__ == '__main__':
+  app.run(debug=True)
+
+def check_vuln():
+  contract_code = request.json['contract_code']
+  results = check_vulnerability(contract_code)
+  return jsonify(results)
